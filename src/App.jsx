@@ -44,8 +44,8 @@ const products = [
 ];
 
 export default function App() {
-  const [size, setSize] = useState("");
   const [color, setColor] = useState("red");
+  const [size, setSize] = useState("");
 
   function renderProduct(p) {
     return (
@@ -59,6 +59,12 @@ export default function App() {
     );
   }
 
+  const filteredProducts = size
+    ? products.filter((p) =>
+        p.skus.find((sku) => sku.size === parseInt(size, 10))
+      )
+    : products;
+
   return (
     <>
       <div className="content">
@@ -69,7 +75,10 @@ export default function App() {
             <select
               id="size"
               value={size}
-              onChange={(event) => setSize(event.target.value)}
+              onChange={(event) => {
+                setColor("Blue");
+                setSize(event.target.value);
+              }}
             >
               <option value="">All sizes</option>
               <option value="7">7</option>
@@ -77,7 +86,8 @@ export default function App() {
               <option value="9">9</option>
             </select>
           </section>
-          <section id="products">{products.map(renderProduct)}</section>
+          {size && <h2>Found {filteredProducts.length} items</h2>}
+          <section id="products">{filteredProducts.map(renderProduct)}</section>
         </main>
       </div>
       <Footer />
