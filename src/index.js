@@ -7,7 +7,6 @@ import {BrowserRouter as Router} from "react-router-dom";
 ReactDOM.render(
   <ErrorBoundary>
     <Router>
-
     <App />
     </Router>
   </ErrorBoundary>,
