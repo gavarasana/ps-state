@@ -29,7 +29,10 @@ function addToCart({id, sku}){
         <main>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/Cart" component={Cart} />
+            <Route path="/Cart" >
+              debugger;
+              <Cart cart={cart} />
+            </Route>
             <Route exact path="/:category" component={Products} />
             <Route path="/:category/:id">
                 <Detail addToCart={addToCart}/>

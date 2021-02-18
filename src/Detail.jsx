@@ -35,7 +35,7 @@ export default function Detail(props) {
         <button disabled={!sku}
           className="btn btn-primary"
           onClick={() => {
-            PaymentResponse.addToCart(productId, sku);
+            props.addToCart(productId, sku);
             history.push("/cart");
             }
         }
