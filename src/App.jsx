@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
 import Footer from "./Footer";
@@ -9,17 +9,33 @@ import Detail from "./Detail";
 import Cart from "./Cart";
 
 export default function App() {
-  const [cart, setCart] = useState([]);
+  
+  const [cart, setCart] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("cart")) ?? [];
+    } catch {
+      console.error("Could not parse cart from local storage");
+      return [];
+    }
+  });
 
-function addToCart({id, sku}){
+  useEffect(() => localStorage.setItem("cart", JSON.stringify(cart)));
+
+function addToCart(id, sku){
   const itemInCart = cart.find((c) => c.sku === sku);
   setCart((items) => {  
     if (itemInCart){
-          items.map((i) => i.sku===sku ? {...i, quantity: i.quantity +1 } : i);
+         return items.map((i) => i.sku===sku ? {...i, quantity: i.quantity +1 } : i);
     }
   else {
     return [...items, {id, sku, quantity:1}];
   }});
+}
+
+function updateQuantity(sku, quantity){
+  setCart((items) => {
+    return (quantity === 0 ) ?  items.filter((i) => i.sku !== sku) : items.map((i) => i.sku===sku ? {...i, quantity} : i);
+    });
 }
 
   return (
@@ -30,12 +46,11 @@ function addToCart({id, sku}){
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/Cart" >
-              debugger;
-              <Cart cart={cart} />
+              <Cart cart={cart} updateQuantity={updateQuantity}/>
             </Route>
             <Route exact path="/:category" component={Products} />
             <Route path="/:category/:id">
-                <Detail addToCart={addToCart}/>
+                <Detail addToCart={addToCart} />
             </Route>
           </Switch>
         </main>
