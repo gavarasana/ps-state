@@ -7,6 +7,7 @@ import Home from "./Home";
 import Products from "./Products";
 import Detail from "./Detail";
 import Cart from "./Cart";
+import Checkout from "./Checkout";
 
 export default function App() {
   
@@ -47,6 +48,9 @@ function updateQuantity(sku, quantity){
             <Route exact path="/" component={Home} />
             <Route path="/Cart" >
               <Cart cart={cart} updateQuantity={updateQuantity}/>
+            </Route>
+            <Route path="/Checkout">
+              <Checkout cart={cart}/>
             </Route>
             <Route exact path="/:category" component={Products} />
             <Route path="/:category/:id">

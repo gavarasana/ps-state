@@ -1,9 +1,11 @@
-import React from "react";
+import React  from "react";
+import {useHistory } from "react-router-dom";
 import useFetchAll from "./services/useFetchAll";
 import Spinner from "./Spinner";
 
 export default function Cart({ cart, updateQuantity }) {
-    
+  
+  const history = useHistory();
   const urls = cart.map((i) => `products/${i.id}`);
   const { data: products, loading, error } = useFetchAll(urls);
 
@@ -57,6 +59,9 @@ export default function Cart({ cart, updateQuantity }) {
     <section id="cart">
           <h2>{totalItemsInCart === 0 ? "Your cart is empty" : `${totalItemsInCart} item${totalItemsInCart > 1 ? "s" : ""} in cart` }</h2>
       <ul>{cart.map(renderItem)}</ul>
+      {cart.length > 0 && 
+      <button className="btn btn-primary" onClick={() => history.push("/Checkout")}>Checkout</button>
+      }
     </section>
   );
 }
