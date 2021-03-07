@@ -39,6 +39,9 @@ function updateQuantity(sku, quantity){
     });
 }
 
+function emptyCart(){
+  setCart([]);
+}
   return (
     <>
       <div className="content">
@@ -50,7 +53,7 @@ function updateQuantity(sku, quantity){
               <Cart cart={cart} updateQuantity={updateQuantity}/>
             </Route>
             <Route path="/Checkout">
-              <Checkout cart={cart}/>
+              <Checkout cart={cart} emptyCart={emptyCart} />
             </Route>
             <Route exact path="/:category" component={Products} />
             <Route path="/:category/:id">

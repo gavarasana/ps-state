@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {saveShippingAddress} from "./services/shippingService";
 
 // Declaring outside component to avoid recreation on each render
 const emptyAddress = {
@@ -6,8 +7,20 @@ const emptyAddress = {
   country: "",
 };
 
-export default function Checkout({ cart }) {
+const STATUS = {
+  "IDLE" : "IDLE",
+  "SUBMITTING" : "SUBMITTING",
+  "SUBMITTED" : "SUBMITTED",
+  "COMPLETED" : "COMPLETED"
+};
+
+export default function Checkout({ cart, emptyCart }) {
   const [address, setAddress] = useState(emptyAddress);
+  const [status, setStatus] = useState(STATUS.IDLE);
+  const [saveError, setSaveError] = useState(null);
+
+  const validationErrors = getErrors(address);
+  const isValid = ( Object.keys(validationErrors).length === 0);
 
   function handleChange(e) {
     e.persist();
@@ -24,12 +37,48 @@ export default function Checkout({ cart }) {
   }
 
   async function handleSubmit(event) {
-    // TODO
+    event.preventDefault();
+    
+    if (isValid) {
+      setStatus(STATUS.SUBMITTING);
+    try {
+      
+      await saveShippingAddress(address);
+      emptyCart();
+      setStatus(STATUS.COMPLETED);
+    } catch (e){
+      setSaveError(e);
+    }
+  } else {
+    setStatus(STATUS.SUBMITTED);
+  }    
   }
 
+  function getErrors(address)
+  {
+    const validationResult = {};
+    if ( (!address.city) || (address.city.trim().length === 0)) validationResult.address = "City is required";
+    if ( !address.country) validationResult.country = "Country is required";
+    return validationResult;
+  }
+
+  if (saveError) throw saveError;
+  if (status === STATUS.COMPLETED) {
+    return <h1>Thanks for shopping</h1>;
+  
+  }
   return (
     <>
       <h1>Shipping Info</h1>
+      {!isValid && (status === STATUS.SUBMITTED) && (
+          <div role="alert">
+            <p>Please fix the following errors:</p>
+          <ul>
+           { Object.keys(validationErrors).map((key) => { return <li key={key}>{validationErrors[key]}</li>;})}
+          </ul>
+         </div>
+      )   
+      }
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="city">City</label>
@@ -64,7 +113,8 @@ export default function Checkout({ cart }) {
           <input
             type="submit"
             className="btn btn-primary"
-            value="Save Shipping Info"
+            value="Save Shipping Info" 
+            disabled = { status === STATUS.SUBMITTING}
           />
         </div>
       </form>
