@@ -18,6 +18,7 @@ export default function Checkout({ cart, emptyCart }) {
   const [address, setAddress] = useState(emptyAddress);
   const [status, setStatus] = useState(STATUS.IDLE);
   const [saveError, setSaveError] = useState(null);
+  const [touched, setTouched] = useState({});
 
   const validationErrors = getErrors(address);
   const isValid = ( Object.keys(validationErrors).length === 0);
@@ -33,7 +34,14 @@ export default function Checkout({ cart, emptyCart }) {
   }
 
   function handleBlur(event) {
-    // TODO
+    event.persist();
+
+    setTouched( (prevValue) => {
+      return {
+        ...prevValue,
+        [event.target.id]: true
+      }
+    } );   
   }
 
   async function handleSubmit(event) {
@@ -90,6 +98,9 @@ export default function Checkout({ cart, emptyCart }) {
             onBlur={handleBlur}
             onChange={handleChange}
           />
+          <p role="alert">
+            {(touched.city || status.SUBMITTED) && validationErrors.city}
+          </p>
         </div>
 
         <div>
@@ -107,6 +118,9 @@ export default function Checkout({ cart, emptyCart }) {
             <option value="United Kingdom">United Kingdom</option>
             <option value="USA">USA</option>
           </select>
+          <p role="alert">
+            {(touched.country || status.SUBMITTED) && validationErrors.country}
+          </p>
         </div>
 
         <div>
