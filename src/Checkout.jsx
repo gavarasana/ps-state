@@ -65,7 +65,7 @@ export default function Checkout({ cart, emptyCart }) {
   function getErrors(address)
   {
     const validationResult = {};
-    if ( (!address.city) || (address.city.trim().length === 0)) validationResult.address = "City is required";
+    if ( (!address.city) || (address.city.trim().length === 0)) validationResult.city = "City is required";
     if ( !address.country) validationResult.country = "Country is required";
     return validationResult;
   }
