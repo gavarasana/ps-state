@@ -35,7 +35,8 @@ export default function Checkout({ cart, emptyCart }) {
 
   function handleBlur(event) {
     event.persist();
-
+    debugger;
+    console.log(event.target.id);
     setTouched( (prevValue) => {
       return {
         ...prevValue,

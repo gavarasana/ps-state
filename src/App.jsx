@@ -8,6 +8,7 @@ import Products from "./Products";
 import Detail from "./Detail";
 import Cart from "./Cart";
 import Checkout from "./Checkout";
+import cartReducer from "./cartReducer";
 
 export default function App() {
   
@@ -42,6 +43,7 @@ function updateQuantity(sku, quantity){
 function emptyCart(){
   setCart([]);
 }
+
   return (
     <>
       <div className="content">
