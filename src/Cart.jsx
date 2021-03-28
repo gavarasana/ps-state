@@ -2,9 +2,12 @@ import React  from "react";
 import {useHistory } from "react-router-dom";
 import useFetchAll from "./services/useFetchAll";
 import Spinner from "./Spinner";
+import  {useCart} from "./cartContext";
 
-export default function Cart({ cart, dispatch }) {
+export default function Cart() {
   
+  const {cart, dispatch} = useCart();
+
   const history = useHistory();
   const urls = cart.map((i) => `products/${i.id}`);
   const { data: products, loading, error } = useFetchAll(urls);
@@ -17,14 +20,9 @@ export default function Cart({ cart, dispatch }) {
     );
     const { size } = skus.find((s) => s.sku === sku);
 
-
-  
-    
       return (
-    
 
-      
-      <li key={sku} className="cart-item">
+    <li key={sku} className="cart-item">
         <img src={`/images/${image}`} alt={name} />
         <div>
           <h3>{name}</h3>
